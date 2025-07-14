@@ -1,125 +1,123 @@
-:root {
-    color-scheme: light dark;
-    --green: #00b755;
-    --yellow: #daaf38;
-    --red: #ca4754;
-    --black: #313131;
-    --gray: #a5a5a5;
+* {
+  box-sizing: border-box;
 }
 
 body {
-    background: var(--black);
-    font-family: Menlo, monospace;
-    display: grid;
-    padding: 32px;
-    justify-content: center;
-    margin-top: 32px;
-    padding: 16px;
+  background: #222;
+  color: #eee;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  display: grid;
+  place-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+main {
+  display: grid;
+  gap: 32px;
 }
 
 section {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
-time {
-    color: var(--yellow);
+h2, h3 {
+  margin: 0;
 }
 
-input {
-    z-index: -999;
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    opacity: 0;
+#games {
+  font-size: 24px;
+  width: 800px;
+  height: 300px;
+  position: relative;
 }
 
-p {
-    display: flex;
-    margin: 0;
+#games time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#games p {
+  user-select: none;
+  font-family: monospace;
+  line-height: 1.8;
+  max-height: 180px;
+  overflow: hidden;
+  text-align: justify;
+}
+
+#games input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  border: none;
+  padding: 0;
 }
 
 letter {
-    color: var(--gray);
-    position: relative;
+  transition: color .25s;
+}
 
-    &.active::before {
-        content: '|';
-        color: var(--yellow);
-        font-size: 14px;
-        font-weight: bold;
-        position: absolute;
-        left: -65%;
-        animation: 1s blink infinite ease-in-out;
-    }
+letter.correct {
+  color: #afb;
+}
 
-    &.active.is-last::before {
-        left: 65%;
-    }
+letter.incorrect {
+  color: #f88;
+  text-decoration: underline;
+  text-decoration-color: red;
+}
 
-    &.correct {
-        color: var(--green);
-    }
+letter.active {
+  position: relative;
+}
 
-    &.incorrect {
-        color: var(--red);
-    }
+/* Blinking cursor */
+letter.active::before {
+  content: '|';
+  position: absolute;
+  inset: 0;
+  color: #ffc107;
+  animation: blink .5s infinite;
 }
 
 word {
-    border-bottom: 1.5px solid transparent;
-    transition: border-color 0.3s ease-in-out;
-
-    &.marked {
-        border-color: var(--red);
-    }
+  /* Esto convierte a la palabra en un contexto de posicionamiento.
+     Es crucial para que el cursor del espacio (::after) se coloque
+     junto a la palabra y no en una esquina del área de juego. */
+  position: relative;
+  /* Trata a las palabras como bloques para un posicionamiento más fiable del cursor. */
+  display: inline-block;
 }
 
 @keyframes blink {
-    0%, 25% {
-        opacity: 1;
-    }
-
-    75% {
-        opacity: 0;
-    }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-#results {
-    display: none;
+word.marked {
+  text-decoration: underline;
+  text-decoration-color: red;
+  text-decoration-thickness: 2px;
 }
 
-h2 {
-    color: var(--gray);
-    font-weight: 400;
-    opacity: .4;
-    margin: 0;
-    font-size: 16px;
-}
-
-h3 {
-    font-weight: 400;
-    margin: 0;
-    font-size: 24px;
-    color: var(--yellow);
-}
-
-button {
-    background: transparent;
-    border: 0;
-    margin-top: 32px;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    cursor: pointer;
-    border-radius: 16px;
-    color: var(--gray);
-
-    &:hover {
-        background: #444;
-        opacity: 1;
-        scale: 110%;
-    }
+/* Cursor for the space between words */
+word.active.cursor-space::after {
+  content: '|';
+  position: absolute;
+  /* Posiciona el cursor justo al final del elemento 'word' */
+  left: 100%;
+  top: 0;
+  color: #ffc107;
+  animation: blink .5s infinite;
 }
